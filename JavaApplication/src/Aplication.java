@@ -4,70 +4,79 @@ import java.util.Scanner;
 
 public class Aplication {
 
-    public static final int P = 5, Q = 11;
+    public static final int P = 5, Q = 11, E = 7;
 
     public class Chaves {
 
         public static int n = P * Q;
         public static int z = (P - 1) * (Q - 1);
-        public static int e = 7;
-        public static int d = (2 * (n - 1) + 1) / e;
+        public static int d = (z*2+1)/E;
     }
 
     public class Coding {
 
+        public static char[] name;
+
         public static int tam_string;
         public static int[] code;
+        private static boolean[] cripto;
 
-        public static int[] Encoding(String name) {
+        public static void Encoding(String name) {
+
             tam_string = name.length();
             code = new int[tam_string];
+            Coding.name = new char[tam_string];
             for (int i = 0; i < tam_string; i++) {
-                char c = name.charAt(i);
-                if ((int) c == 32) {
+                Coding.name[i] = name.charAt(i);
+            }
+
+            for (int i = 0; i < tam_string; i++) {
+                Coding.name[i] = name.charAt(i);
+                if ((int) Coding.name[i] == 32) {
                     code[i] = 55;
                 } else {
-                    code[i] = (int) c - 55;
+                    code[i] = (int) Coding.name[i] - 55;
                 }
             }
 
-            return code;
+        }
+
+        public static void Dencoding(int[] code) {
+            for (int i = 0; i < tam_string; i++) {
+                if (code[i] == 55) {
+                    name[i] = 32;
+                } else {
+                    name[i] = (char) (code[i] + 55);
+                }
+
+            }
+
         }
     }
-    
-    public class Cripting{
-        public static long [] cripto;
-        public static int [] mensagem_plana;
+
+    public class Cripting {
+
+        public static int cripto[] = new int[Coding.tam_string];
+        public static int mensagem_plana[] = new int[Coding.tam_string];
         
-        public static long [] Encripting(int [] code) {
-            for (int i=0;i<Coding.tam_string;i++){
-                mensagem_plana[i]=code[i];
-                cripto[i] = (long) pow(mensagem_plana[i],Chaves.e)%Chaves.n;
+        
+
+        public static void Encripting() {
+            for (int i = 0; i < Coding.tam_string; i++) {
+                
+                cripto[i] = (int) (Math.pow(Coding.code[i], E) % Chaves.n);
             }
-            return cripto; 
-            
-           }
-        public static int[] Desencripting(long [] code) {
-            for (int i=0;i<Coding.tam_string;i++){
-                cripto[i] = code[i];
-                mensagem_plana [i] = (int) (pow(cripto[i], Chaves.d)%Chaves.n); 
+
+        }
+
+        public static int[] Desencripting() {
+            for (int i = 0; i < Coding.tam_string; i++) {
+                mensagem_plana[i] = (int) (Math.pow(cripto[i], Chaves.d) % Chaves.n);
             }
             return mensagem_plana;
-        
-    }
-        
-    }
-    
-    
-    
 
-    
+        }
 
-    
-
-    public static String Desencoding(int[] code) {
-
-        return "a";
     }
 
     public static void main(String[] args) {
@@ -75,6 +84,21 @@ public class Aplication {
         System.out.println("Digite um frase ou palavra a ser encriptografada:");
         String name = src.nextLine();
         Coding.Encoding(name.toUpperCase());
+        Cripting.Encripting();
+        Cripting.Desencripting();
+        System.out.println("pre codigo");
+        for (int i = 0; i < Coding.tam_string; i++) {
+            System.out.print(Coding.code[i]);
+        }
+        System.out.println("\nrsa");
+        for (int i = 0; i < Coding.tam_string; i++) {
+            System.out.print(Cripting.cripto[i]);
+        }
+        System.out.println();
+        for (int i = 0; i < Coding.tam_string; i++) {
+            System.out.print(Cripting.mensagem_plana[i]);
+        }
+        
+    
     }
-
 }
